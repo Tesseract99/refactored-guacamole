@@ -3,9 +3,9 @@ version: "3.8"
 
 #services
 services:
-  backend:
+  backend-app:
     build:
-      context: /home/prithvi/Desktop/CICD/simple_app
+      context: ./
       dockerfile: Dockerfile
     ports:
       - 3001:3001
