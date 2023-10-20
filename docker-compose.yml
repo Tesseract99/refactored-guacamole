@@ -4,7 +4,9 @@ version: "3.8"
 #services
 services:
   backend:
-    build: .
+    build:
+      context: /home/prithvi/Desktop/CICD/simple_app
+      dockerfile: Dockerfile
     ports:
       - 3001:3001
     stdin_open: true
