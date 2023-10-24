@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: simple-app
-          image: tesseract99/simple_app:replaceImageTag
+          image: tesseract99/simple_app:30
           ports:
             - containerPort: 3001
