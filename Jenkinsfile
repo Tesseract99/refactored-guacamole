@@ -1,11 +1,12 @@
 pipeline {
   agent {
-    // docker {
-    //   image 'abhishekf5/maven-abhishek-docker-agent:v1'
-    //   args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
-    // }
+    docker {
+      // image 'abhishekf5/maven-abhishek-docker-agent:v1'
+      image 'tesseract99/goals-app-backend:latest'
+      args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
+    }
 
-    label 'EC2-Node-1'
+    // label 'EC2-Node-1'
   }
   stages {
     // stage('Checkout') {
@@ -32,28 +33,28 @@ pipeline {
     //   }
     // }
 
-    stage('create a file in EC2') {
-      steps {
-        sh 'touch antifragility.txt'
-      }
-    }
-
-    // stage('Build and Push Docker Image') {
-    //   environment {
-    //     DOCKER_IMAGE = "tesseract99/simple_app:${BUILD_NUMBER}"
-    //     // DOCKERFILE_LOCATION = "java-maven-sonar-argocd-helm-k8s/spring-boot-app/Dockerfile"
-    //     REGISTRY_CREDENTIALS = credentials('docker-cred')
-    //   }
+    // stage('create a file in EC2') {
     //   steps {
-    //     script {
-    //         sh 'docker build -t ${DOCKER_IMAGE} .'
-    //         def dockerImage = docker.image("${DOCKER_IMAGE}")
-    //         docker.withRegistry('https://index.docker.io/v1/', "docker-cred") {
-    //             dockerImage.push()
-    //         }
-    //     }
+    //     sh 'touch antifragility.txt'
     //   }
     // }
+
+    stage('Build and Push Docker Image') {
+      environment {
+        DOCKER_IMAGE = "tesseract99/simple_app:${BUILD_NUMBER}"
+        // DOCKERFILE_LOCATION = "java-maven-sonar-argocd-helm-k8s/spring-boot-app/Dockerfile"
+        REGISTRY_CREDENTIALS = credentials('docker-cred')
+      }
+      steps {
+        script {
+            sh 'docker build -t ${DOCKER_IMAGE} .'
+            def dockerImage = docker.image("${DOCKER_IMAGE}")
+            docker.withRegistry('https://index.docker.io/v1/', "docker-cred") {
+                dockerImage.push()
+            }
+        }
+      }
+    }
     // stage('Update Deployment File') {
     //     environment {
     //         GIT_REPO_NAME = "Jenkins-Zero-To-Hero"
